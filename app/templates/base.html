@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--Altair-->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <!-- Estilos y scripts de DataTables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  
+  <title>MyFinancesX</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+
+<body>
+
+    <div class="logo">
+        <img src="{{ url_for('static', filename='images/logo_dolar.png') }}" alt="MyFinancesX Logo">
+        <a href="{{ url_for('public.index') }}">MyFinancesX</a>
+      </div>
+    
+      <header>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="user-actions">
+            {% if current_user.is_authenticated %}
+            <span>Hi, {{ current_user.username }}</span>
+
+            <a href="{{ url_for('admin.data_mgt') }}">Dashboard</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">Log In</a>
+            <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+        {% endif %}
+        </div>
+      </header>
+
+
+      <div class="content">
+        <div class="image-container">
+            {% block content %}
+            
+            
+            {% endblock %}
+        </div>
+      </div>
+    
+      <footer>
+        <a href="#">Footer Link 1</a>
+        <a href="#">Footer Link 2</a>
+      </footer>
+
+</body>
+
+</html>

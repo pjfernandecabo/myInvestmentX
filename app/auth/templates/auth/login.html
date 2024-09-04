@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<div class="signup">
+    <div class="signup-container">
+      <h2>Inicia sesión</h2>
+      <form method="POST" action="{{ url_for('auth.login') }}">
+          {{ form.hidden_tag() }}
+  
+      <input type="text" id="username" name="username" placeholder="Username or email" required/>
+      <input type="password" placeholder="Password" id="password" name="password" required/>
+      <button>Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+
+{% endblock %}

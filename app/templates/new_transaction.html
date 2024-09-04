@@ -1,0 +1,42 @@
+
+{% block title %}Introducir Nuevo Fondo - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<body>
+
+    <div class="content-wrapper">
+        <main id="main-content">
+            <h2>Introducir nueva transacción</h2>
+            <form action="{{ url_for('main.new_transaction') }}" method="post">
+                {{ form.hidden_tag() }}
+
+                <div>
+                    {{ form.fund.label }}<br>
+                    {{ form.fund() }}
+                </div>
+                <div>
+                    {{ form.operation.label }}<br>
+                    {{ form.operation() }}
+                </div>
+                <div>
+                    {{ form.date.label }}<br>
+                    {{ form.date() }}
+                </div>
+                <div>
+                    {{ form.value_per_unit.label }}<br>
+                    {{ form.value_per_unit() }}
+                </div>
+                <div>
+                    <input type="submit" value="Guardar Transacción">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Guardar transacción</button>
+            </form>
+        </main>
+    </div>
+</body>  
+
+
+{% endblock %}

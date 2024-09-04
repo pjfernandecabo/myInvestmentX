@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Transacción</title>
+</head>
+<body>
+    <h1>Registrar Nueva Transacción</h1>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.fund.label }}<br>
+            {{ form.fund() }}
+        </div>
+        <div>
+            {{ form.operation.label }}<br>
+            {{ form.operation() }}
+        </div>
+        <div>
+            {{ form.date.label }}<br>
+            {{ form.date() }}
+        </div>
+        <div>
+            {{ form.value_per_unit.label }}<br>
+            {{ form.value_per_unit() }}
+        </div>
+        <div>
+            <input type="submit" value="Guardar Transacción">
+        </div>
+    </form>
+
+    <a href="{{ url_for('main.position') }}">Volver a la posición</a>
+</body>
+</html>

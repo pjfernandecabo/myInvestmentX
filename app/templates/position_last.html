@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block title %}Home - MyFinancesX{% endblock %}
+
+{% block content %}
+<body>
+
+    <div class="content-wrapper">
+        <aside id="sidebar">
+        <h3>Mis productos de inversión</h3>
+            <ul>
+                <a href="#" onclick="loadContent('verdatos')">Position</a>
+                <a href="#" onclick="loadContent('intro')">Introducir nuevos datos c/v</a>
+                <a href="#" onclick="loadContent('introfund')">Introducir nuevo fondo</a>
+                <a href="#" onclick="loadContent('eliminar')">Eliminar fondos</a>
+            </ul>
+        </aside>
+
+
+
+
+        <!-- ==================== Start Dashboard  ========================= -->
+        <main id="main-content">
+            <div class="container">
+                <h2>Tablero de Información</h2>
+                
+                <!-- Aquí se muestran las tablas generadas por Pandas -->
+                {% for table in tables %}
+                    <div class="table-responsive">
+                        {{ table | safe }}
+                    </div>
+                {% endfor %}
+            </div>  
+
+                <div class="graphs-container">
+                    <div class="graph">
+                        <div id="balance-chart-eur"></div>
+                            <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+                            <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+                            <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+                            <div id="balance-chart"></div>
+            
+                            <script type="text/javascript">
+                                const chartSpec = {{ graph_total_balance | safe }};
+                                vegaEmbed('#balance-chart', chartSpec).catch(console.error);
+                            </script>
+                    </div>
+                    <div class="graph">
+                        <div id="balance-chart-usd"></div>
+                            <h3>Saldos Acumulados por fondos</h3>
+                            <img src="data:image/png;base64,{{ graph_url_fund }}" alt="Gráfico de saldos acumulados">
+                    </div>
+                </div>
+
+
+            <div id="dashboard-content">
+                <h2>Tablero de Información</h2>
+                <div class="form-group">
+                    <label for="start_date">Fecha de Inicio:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">Fecha Final:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="target_percentage">Porcentaje Objetivo a Ganar (%):</label>
+                    <input type="number" id="target_percentage" name="target_percentage" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+
+                <h4>Saldo Total en Euros</h4>
+                <div class="graph-placeholder">
+                    <!-- Aquí se mostrará el gráfico generado por Matplotlib -->
+                    <img src="{{ url_for('static', filename='graphs/total_balance_euros.png') }}" alt="Saldo Total en Euros">
+                </div>
+                <h4>Saldo Total en USD</h4>
+                <div class="graph-placeholder">
+                    <!-- Aquí se mostrará el gráfico generado por Matplotlib -->
+                    <img src="{{ url_for('static', filename='graphs/total_balance_usd.png') }}" alt="Saldo Total en USD">
+                </div>
+
+
+
+                <div class="graph-placeholder">
+                    Gráfico de distribución (generado por matplotlib)
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+
+
+    <!-- ===============Start script                           -->
+    <script>
+        function loadContent(section) {
+            const content = document.getElementById('dashboard-content');
+            let url = '';
+            
+            switch(section) {
+            
+                case 'verdatos':
+                    url = 'position.html';
+                    break;
+                case 'intro':
+                    url = 'new_transaction.html';
+                    break;
+                case 'introfund':
+                    url = 'new_fund.html';
+                    break;
+                case 'eliminar':
+                    url = 'delete_fund.html';
+                    break;
+                default:
+                    content.innerHTML = '<h2>Seleccione una opción</h2>';
+                    return;
+            }
+
+            // Cargar el contenido del archivo HTML correspondiente
+            fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                content.innerHTML = html;
+
+                // Adjuntar un evento de envío al formulario para manejar AJAX
+                const fundForm = document.getElementById('fund-form');
+                if (fundForm) {
+                    fundForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        submitFormAjax(event.target);
+                    });
+                }
+            })
+            .catch(err => {
+                content.innerHTML = '<h2>Error al cargar el contenido</h2>';
+                console.error('Error al cargar el contenido:', err);
+            });
+    }
+
+    function submitFormAjax(form) {
+        const formData = new FormData(form);
+        const url = form.action;
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Fondo guardado con éxito');
+                loadContent('verdatos'); // Redirigir o cargar otro contenido si es necesario
+            } else {
+                // Verifica que el div de errores esté presente antes de usarlo
+                let errorsDiv = document.getElementById('form-errors');
+                if (!errorsDiv) {
+                    errorsDiv = document.createElement('div');
+                    errorsDiv.id = 'form-errors';
+                    form.prepend(errorsDiv);
+                }
+
+                errorsDiv.innerHTML = ''; // Limpiar errores anteriores
+                for (let field in data.errors) {
+                    const error = document.createElement('div');
+                    error.className = 'error-message';
+                    error.textContent = data.errors[field][0];
+                    errorsDiv.appendChild(error);
+                }
+            }
+        })
+        .catch(err => {
+            console.error('Error al enviar el formulario:', err);
+        });
+    }
+    </script>
+</body>    
+{% endblock %}

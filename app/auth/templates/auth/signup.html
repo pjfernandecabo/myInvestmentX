@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<div class="signup">
+  <div class="signup-container">
+    <h2>Create a new account</h2>
+    <form method="POST" action="{{ url_for('auth.signup') }}">
+        {{ form.hidden_tag() }}
+
+    <input type="text" id="username" name="username" placeholder="Username" required/>
+    <input type="email" placeholder="Email" id="email" name="email" required/>
+    <input type="password" placeholder="Password" id="password" name="password" required/>
+    <button>Sign Up</button>
+    </form>
+  </div>
+</div>
+
+
+
+<script>
+    document.getElementById('email').addEventListener('input', function (e) {
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(e.target.value)) {
+            e.target.setCustomValidity('Please enter a valid email address.');
+        } else {
+            e.target.setCustomValidity('');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+
+{% block title %}Dashboard - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<body>
+
+    <div class="content-wrapper">
+
+        <!-- Contenido principal -->
+        <main id="main-content">
+            <div id="dashboard-content">
+                <h2>Tablero de Información</h2>
+
+                <!-- Filtros de fecha y porcentaje objetivo -->
+                <div id="filters" class="filter-bar">
+                    <form id="filter-form" method="post" action="{{ url_for('main.view_data') }}">
+                        <label for="start-date">Fecha de inicio:</label>
+                        <input type="date" id="start-date" name="start_date" required>
+                        
+                        <label for="end-date">Fecha final:</label>
+                        <input type="date" id="end-date" name="end_date" required>
+                        
+                        <label for="target-percentage">Porcentaje objetivo (%):</label>
+                        <input type="number" id="target-percentage" name="target_percentage" required>
+                        
+                        <button type="submit">Aplicar filtros</button>
+                    </form>
+                </div>
+
+                <!-- Gráficos -->
+                <div class="graph-section">
+                    <div class="graph-container">
+                        <h3>Saldo Acumulado</h3>
+                        <img src="{{ url_for('main.plot_accumulated_balance') }}" alt="Gráfico del saldo acumulado" id="accumulated-balance-plot">
+                    </div>
+                    
+                    <div class="graph-container">
+                        <h3>Plusvalía (%)</h3>
+                    <!--    <img src="{{ url_for('plot_plusvalia_percentage') }}" alt="Gráfico de plusvalía" id="plusvalia-plot"> -->
+                    </div>
+                </div>
+
+                <!-- Tabla de fondos -->
+                <div class="table-section">
+                    <h3>Detalle de Fondos</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fondo</th>
+                                <th>Saldo Fecha Inicio</th>
+                                <th>Saldo Fecha Final</th>
+                                <th>Plusvalía</th>
+                                <th>% Ganancia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí se llenarán los datos dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Gráficos de tendencias -->
+                <div class="trend-section">
+                    <h3>Tendencias de Fondos</h3>
+                    <!-- Gráficos individuales por cada fondo -->
+                    <!-- Ejemplo de gráfica para un fondo -->
+                    <div class="graph-container">
+                        <h4>Fondo XYZ</h4>
+                      <!--  <img src="{{ url_for('plot_fund_trend', fund_id=1) }}" alt="Tendencia del Fondo XYZ" class="trend-plot"> -->
+                    </div>
+                </div>
+            
+
+            </div>
+        </main>
+    </div>
+</body>  
+
+
+{% endblock %}

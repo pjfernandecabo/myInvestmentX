@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyFinancesX{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <!-- <div class="logo">MyFinancesX</div> -->
+            <a href="{{ url_for('public.index') }}">
+                <img src="{{ url_for('static', filename='images/logo_myFinanceX_3.png') }}" alt="myFinanceX" width="200" height="80">
+            </a>
+            <nav>
+                <a href="{{ url_for('public.index') }}">Home</a>
+                {% if current_user.is_authenticated %}
+                    <span>Hi, {{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Log In</a>
+                    <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <footer>
+        <nav>
+            <a href="#">Company</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </footer>
+</body>
+</html>

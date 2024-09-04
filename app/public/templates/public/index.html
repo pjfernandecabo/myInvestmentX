@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Home - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<section class="hero">
+    <h1>Welcome to MyFinancesX</h1>
+    <p>Track your home incomes and expenses</p>
+</section>
+<section class="abstract-art">
+    <img src="{{ url_for('static', filename='images/finantial_charts.jpg') }}" alt="Financial abstract art" width="500" height="150">
+</section>
+
+
+{% endblock %}

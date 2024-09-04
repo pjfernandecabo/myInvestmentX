@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}New Transaction - MyFinancesX{% endblock %}
+
+{% block content %}
+
+<div class="secondary-nav">
+    <a href="{{ url_for('admin.data_mgt') }}">Data summary</a>
+    <a href="{{ url_for('admin.monthly_report') }}">Monthly Report</a>
+    <a href="{{ url_for('admin.new_transaction') }}">New Trx</a>
+    <a href="{{ url_for('admin.new_fund') }}">New Fund</a>
+    <a href="#">Scenaries</a>
+    <a href="#">Delete</a>
+</div>
+
+
+
+    <div class="container-new-trx">
+            <div class="form-container-new-trx"> 
+       
+<!-- <div class="signup">
+            <div class="signup-container"> -->
+
+                <h2>New Trx</h2>
+
+
+                <form method="POST" action="{{ url_for('admin.new_transaction') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-group">
+                        {{ form.owner.label }}<br>
+                        {{ form.owner(class="form-control", id="owner-select") }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.fund.label }}<br>
+                        {{ form.fund(class="form-control", id="fund-select") }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.date.label }}<br>
+                        {{ form.date(class="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.operation_type.label }}<br>
+                        {{ form.operation_type(class="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.value.label }}<br>
+                        {{ form.value(class="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.units.label }}<br>
+                        {{ form.units(class="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+
+
+                <script>
+                    document.getElementById('owner-select').addEventListener('change', function() {
+                        let owner = this.value;
+                        let fundSelect = document.getElementById('fund-select');
+                        
+                        // Limpiar opciones previas
+                        fundSelect.innerHTML = '';
+                
+                        if (owner) {
+                            fetch('/get_funds/' + owner)
+                                .then(response => response.json())
+                                .then(data => {
+                                    data.forEach(fund => {
+                                        let option = document.createElement('option');
+                                        option.value = fund.name;
+                                        option.textContent = fund.name;
+                                        fundSelect.appendChild(option);
+                                    });
+                                });
+                        }
+                    });
+                </script>
+
+    </div>
+</div>
+
+{% endblock %}

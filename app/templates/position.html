@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block title %}Home - MyFinancesX{% endblock %}
+{% block content %}
+<body>
+    <div class="content-wrapper">
+        <aside id="sidebar">
+        <h3>Mis productos de inversión</h3>
+            <ul>
+                <a href="#" onclick="loadContent('verdatos')">Ver Datos</a>
+                <a href="#" onclick="loadContent('intro')">Introducir nuevos datos c/v</a>
+                <a href="#" onclick="loadContent('introfund')">Introducir nuevo fondo</a>
+                <a href="#" onclick="loadContent('eliminar')">Eliminar fondos</a>
+            </ul>
+        </aside>
+
+        <main id="main-content">
+            <div id="dashboard-content">
+                <h2>Tablero de Información</h2>
+                <div class="graph-placeholder">
+                    Gráfico de distribución (generado por matplotlib)
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script>
+        function loadContent(section) {
+            const content = document.getElementById('dashboard-content');
+            let url = '';
+            
+            switch(section) {
+                case 'verdatos':
+                    url = 'position.html';
+                    break;
+                case 'intro':
+                    url = 'new_transaction.html';
+                    break;
+                case 'introfund':
+                    url = 'new_fund.html';
+                    break;
+                case 'eliminar':
+                    url = 'delete_fund.html';
+                    break;
+                default:
+                    content.innerHTML = '<h2>Seleccione una opción</h2>';
+                    return;
+            }
+
+            // Cargar el contenido del archivo HTML correspondiente
+            fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                content.innerHTML = html;
+
+                // Adjuntar un evento de envío al formulario para manejar AJAX
+                const fundForm = document.getElementById('fund-form');
+                if (fundForm) {
+                    fundForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        submitFormAjax(event.target);
+                    });
+                }
+            })
+            .catch(err => {
+                content.innerHTML = '<h2>Error al cargar el contenido</h2>';
+                console.error('Error al cargar el contenido:', err);
+            });
+    }
+
+    function submitFormAjax(form) {
+        const formData = new FormData(form);
+        const url = form.action;
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Fondo guardado con éxito');
+                loadContent('verdatos'); // Redirigir o cargar otro contenido si es necesario
+            } else {
+                // Verifica que el div de errores esté presente antes de usarlo
+                let errorsDiv = document.getElementById('form-errors');
+                if (!errorsDiv) {
+                    errorsDiv = document.createElement('div');
+                    errorsDiv.id = 'form-errors';
+                    form.prepend(errorsDiv);
+                }
+
+                errorsDiv.innerHTML = ''; // Limpiar errores anteriores
+                for (let field in data.errors) {
+                    const error = document.createElement('div');
+                    error.className = 'error-message';
+                    error.textContent = data.errors[field][0];
+                    errorsDiv.appendChild(error);
+                }
+            }
+        })
+        .catch(err => {
+            console.error('Error al enviar el formulario:', err);
+        });
+    }
+    </script>
+</body>    
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Introducir Nuevo Fondo - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<body>
+
+    <div class="content-wrapper">
+        <main id="main-content">
+            <h2>Introducir nuevo fondo de inversión</h2>
+            <form action="{{ url_for('admin.new_fund') }}" method="post">
+                {{ form.hidden_tag() }}
+
+                <div id="form-errors"></div>
+                
+                <div class="form-group">
+                    <label for="name">Nombre del fondo:</label>
+                    {{ form.name(class_="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="contract_number">Número de expediente:</label>
+                    {{ form.contract_number(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="owner">Titular</label>
+                    {{ form.owner(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="date">Fecha de alta y compra del fondo:</label>
+                    {{ form.date(class_="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="value_per_unit">Valor liquidativo:</label>
+                    {{ form.value_per_unit(class_="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="units">Número de participaciones:</label>
+                    {{ form.units(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="currency">Divisa:</label>
+                    {{ form.currency(class_="form-control") }}
+                </div>                
+                <div class="form-group">
+                    <label for="management_fees">Comisión anual de gestión + deposito:</label>
+                    {{ form.management_fees(class_="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="sell_fees">Comisión de venta:</label>
+                    {{ form.sell_fees(class_="form-control") }}
+                    {% if form.sell_fees.errors %}
+                    <div class="error-message">{{ form.sell_fees.errors }}</div>
+                {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="ter_fees">Comisión TER:</label>
+                    {{ form.ter_fees(class_="form-control") }}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Guardar fondo</button>
+            </form>
+        </main>
+    </div>
+</body>  
+
+
+
+<!--
+<div class="form-container">
+    <h2>Introducir Nuevo Fondo</h2>
+    <form id="nuevo-fondo-form">
+        <label for="fondo-nombre">Nombre del Fondo:</label>
+        <input type="text" id="fondo-nombre" name="fondo-nombre" required><br>
+
+        <label for="numero-contrato">Número de Contrato:</label>
+        <input type="text" id="numero-contrato" name="numero-contrato" required><br>
+
+        <label for="comisiones">Comisiones:</label>
+        <input type="text" id="comisiones" name="comisiones" required><br>
+
+        <input type="submit" value="Guardar Fondo">
+    </form>
+</div>
+-->
+{% endblock %}

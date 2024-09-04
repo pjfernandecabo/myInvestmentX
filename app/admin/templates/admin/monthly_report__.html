@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Monthly Report{% endblock %}
+
+{% block content %}
+<h2>Monthly Report</h2>
+
+<form method="POST" action="{{ url_for('admin.monthly_report') }}">
+    {{ form.hidden_tag() }}
+    
+    <div class="form-group">
+        {{ form.owner.label }}<br>
+        {{ form.owner(class="form-control") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.start_date.label }}<br>
+        {{ form.start_date(class="form-control", placeholder="YYYY-MM-DD") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.end_date.label }}<br>
+        {{ form.end_date(class="form-control", placeholder="YYYY-MM-DD") }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+
+{% if tables_html and plots_html %}
+    <h3>Results</h3>
+    {% for table in tables_html %}
+        {{ table|safe }}
+    {% endfor %}
+
+    {% for plot in plots_html %}
+        {{ plot|safe }}
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

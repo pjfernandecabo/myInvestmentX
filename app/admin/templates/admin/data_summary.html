@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<div class="secondary-nav">
+  <a href="{{ url_for('admin.data_mgt') }}">Data summary</a>
+  <a href="{{ url_for('admin.monthly_report') }}">Monthly Report</a>
+  <a href="{{ url_for('admin.new_transaction') }}">New Trx</a>
+  <a href="{{ url_for('admin.new_fund') }}">New Fund</a>
+  <a href="#">Scenaries</a>
+  <a href="#">Delete</a>
+</div>
+
+<div class="content">
+  <div class="placeholder-content">
+
+    <!-- ==================================================-->
+
+    <div>
+        <h2>{{ eur_table_title }}</h2>
+        <!-- Aquí se renderiza la tabla -->
+        {{ eur_table_html | safe }}
+    </div>
+    <div>
+      <h2>{{ usd_table_title }}</h2>
+      <!-- Aquí se renderiza la tabla -->
+      {{ usd_table_html | safe }}
+  </div>
+    <!-- ==================================================-->
+
+    <div id="currency-balance-chart"></div>
+
+    <script type="text/javascript">
+
+
+        // Inicializamos DataTables
+        $(document).ready( function () {
+            $('.data').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "pageLength": 20,  // Cambiamos el número de filas por página a 20
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'csvHtml5',
+                        text: 'Download CSV',
+                        className: 'btn btn-primary'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Download Excel',
+                        className: 'btn btn-success'
+                    }
+                ]
+            });
+        });
+    </script>
+
+
+    <!-- ==================================================-->
+    <div class="graphs-container-altair">
+
+      <div class="graph-altair">
+          <div id="final-balance-chart"></div>
+          <script type="text/javascript">
+            var finalBalanceChart = {{ graph_final_balance|safe }};
+            vegaEmbed('#final-balance-chart', finalBalanceChart);
+          </script>
+      </div>
+
+      <div class="graph-altair">
+        <div id="currency-final-balance-chart"></div>
+        <script type="text/javascript">
+          var currencyfinalBalanceChart = {{ graph_currency_balance | safe }};
+          vegaEmbed('#currency-final-balance-chart', currencyfinalBalanceChart);
+        </script>
+      </div>
+    </div>
+
+
+    <div class="chart-container">
+      <!-- Placeholder for Matplotlib or Plotly chart -->
+      <img src="data:image/png;base64,{{ graph_url_fund }}" alt="Gráfico de saldos acumulados">
+    </div>
+
+
+
+    <div class="image-row-in-data">
+      <div class="image-container-in-data">
+        <img src="data:image/png;base64,{{ graph_url_fund }}" alt="Gráfico de saldos acumulados">
+      </div>
+      <div class="image-container-in-data">
+        <img src="data:image/png;base64,{{ graph_url_fund }}" alt="Gráfico de saldos acumulados">
+      </div>
+      <div class="image-container-in-data">
+        <img src="data:image/png;base64,{{ graph_url_fund }}" alt="Gráfico de saldos acumulados">
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+{% endblock %}

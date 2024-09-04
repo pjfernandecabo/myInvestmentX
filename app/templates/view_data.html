@@ -1,0 +1,73 @@
+{% block title %}Ver Datos - MyFinancesX{% endblock %}
+
+{% block content %}
+
+<body>
+
+
+    <div class="content-wrapper">
+        <main id="main-content">
+            <h2>Introducir nuevo fondo de inversión</h2>
+            <form action="{{ url_for('main.view_data') }}" method="post">
+                {{ form.hidden_tag() }}
+
+                <div id="form-errors"></div>
+                
+
+                <div class="form-group">
+                    <label for="start_date">Fecha de Inicio:</label>
+                    <input type="date" id="start_date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">Fecha Final:</label>
+                    <input type="date" id="end_date" name="end_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="target_percentage">Porcentaje Objetivo a Ganar (%):</label>
+                    <input type="number" id="target_percentage" name="target_percentage" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            
+
+
+
+                <div class="form-group">
+                    <label for="name">Nombre del fondo:</label>
+                    {{ form.name(class_="form-control") }}
+                </div>
+
+                <div class="form-group">
+                    <label for="contract_number">Número de expediente:</label>
+                    {{ form.contract_number(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="owner">Titular</label>
+                    {{ form.owner(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                    <label for="date">Fecha de alta y compra del fondo:</label>
+                    {{ form.date(class_="form-control") }}
+                </div>
+
+                <h4>Saldo Total en Euros</h4>
+                <div class="graph-placeholder">
+                    <!-- Aquí se mostrará el gráfico generado por Matplotlib -->
+                    <img src="{{ url_for('static', filename='graphs/total_balance_euros.png') }}" alt="Saldo Total en Euros">
+                </div>
+                <h4>Saldo Total en USD</h4>
+                <div class="graph-placeholder">
+                    <!-- Aquí se mostrará el gráfico generado por Matplotlib -->
+                    <img src="{{ url_for('static', filename='graphs/total_balance_usd.png') }}" alt="Saldo Total en USD">
+                </div>
+
+
+
+                
+                <button type="submit" class="btn btn-primary">Guardar fondo</button>
+            </form>
+        </main>
+    </div>
+
+
+</body>
+{% endblock %}

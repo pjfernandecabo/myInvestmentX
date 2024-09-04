@@ -1,0 +1,458 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: rgb(232, 226, 226);
+  }
+
+  .logo {
+    background-color: #fdfdfc;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .logo img {
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .logo a {
+    color: #4267B2;
+    text-decoration: none;
+    font-size: 20px;
+  }
+
+  header {
+    background-color: #618ce3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style-type: none;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .nav-links li {
+    margin-right: 20px;
+  }
+
+  .nav-links li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .user-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .user-actions a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+
+ /* 
+  .content {
+    padding: 40px;
+  }
+*/
+  .image-container {
+    text-align: center;
+  }
+
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  footer {
+    background-color: #4267B2;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+  }
+
+  footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+
+  /* ============================= */
+  
+.signup {
+font-family: Arial, sans-serif;
+background-color: #f2f2f2;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 60vh;
+margin: 0;
+}
+
+.signup-container {
+background-color: white;
+padding: 40px;
+border-radius: 8px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+width: 400px;
+}
+
+.signup-container h2 {
+text-align: center;
+margin-bottom: 30px;
+}
+
+.signup-container input {
+width: 100%;
+padding: 12px 20px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+
+.signup-container button {
+background-color: #4CAF50;
+color: white;
+padding: 14px 20px;
+margin: 8px 0;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+width: 100%;
+}
+
+.signup-container button:hover {
+background-color: #45a049;
+}
+
+/* pagina data summary */
+/* ============================*/
+.secondary-nav {
+  background-color: #3364cf;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.secondary-nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 20px;
+}
+
+.content {
+  /*padding: 40px;*/
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.placeholder-content {
+  background-color: #f0f4f6;
+  padding: 20px;
+  /* text-align: center; */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.filters {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filters input, .filters button {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.filters button {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  background-color: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.negative {
+  color: red;
+}
+
+th, td {
+  border: 1px solid #c2ccd8;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #ccd6e0;
+}
+
+/* New styles for table column widths */
+.col-date { width: 15%; }
+.col-transaction { width: 25%; }
+.col-amount { width: 20%; }
+.col-fund { width: 40%; }
+
+/* este sirve para una sola imagen */
+.chart-container {
+  width: 50%;
+  height: 50%;
+  margin-bottom: 20px;
+}
+    
+
+/* New styles for image row */
+.image-row-in-data {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.image-container-in-data {
+  width: 32%;  /* Slightly less than 33.33% to account for margins */
+}
+
+.image-container-in-data img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+
+.graphs-container-altair {
+  display: flex;
+  justify-content: space-around; /* Espacio igual entre los gráficos */
+  flex-wrap: wrap; /* Si hay demasiados gráficos, se colocarán en la siguiente línea */
+  margin-top: 20px;
+}
+
+.graph-altair {
+  flex: 1 1 20%; /* Permite que cada gráfico ocupe aproximadamente el 45% del contenedor */
+  margin: 10px;
+  box-shadow: 0px 4px 6px rgba(106, 99, 99, 0.1); /* Añade una sombra suave para destacar los gráficos */
+  padding: 10px;
+  background-color: #eef0f3; /* Fondo blanco para los gráficos */
+  border-radius: 8px;
+}
+
+ /* ========= NEW FUND ===========  */
+.container-new-fund {
+  display: flex;
+  flex-direction:column;
+
+  min-height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.form-container-new-fund {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+  
+.container-new-fund button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: auto; /*8px 0;*/
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 30%;
+  }
+  
+  .container-new-fund button:hover {
+  background-color: #45a049;
+  }
+
+/*
+.container-new-fund {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  margin: 0;
+  }
+  
+  .new-fund-fund-container {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  }
+  
+  .new_fund-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  }
+  
+  .new-fund-container input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  }
+  
+  .new-fund-container button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  }
+  
+  .new-fund-container button:hover {
+  background-color: #45a049;
+  }
+  */
+
+
+   /* ========= NEW TRX ===========  */
+.container-new-trx {
+  display: flex;
+  flex-direction:column;
+
+  min-height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.form-container-new-trx {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  margin-left: 0%;
+}
+/*
+form {
+  display: grid;
+  gap: 1rem;
+}
+  */
+.container-new-trx button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: auto; /*8px 0;*/
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 30%;
+  }
+  
+  .container-new-trx button:hover {
+  background-color: #45a049;
+  }
+
+
+  /* ========================= New trx*/
+  /* Estilo general para el formulario */
+form {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  /*max-width: 500px;*/
+  width: 70%;
+  margin: auto;
+}
+
+/* Estilo para los campos de entrada */
+form .form-group {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+form input[type="text"],
+form input[type="date"],
+form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+form input[type="text"]:focus,
+form input[type="date"]:focus,
+form select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Estilo para los botones */
+form .btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 30%;
+}
+
+form .btn:hover {
+  background-color: #45a049;
+}
+
+/* Estilo para los mensajes de error */
+.form-error {
+  color: #d9534f;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Estilo para el título del formulario */
+form h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}

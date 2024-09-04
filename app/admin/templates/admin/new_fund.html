@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Introducir Nuevo Gasto - MyFinancesX{% endblock %}
+
+{% block content %}
+
+
+<div class="secondary-nav">
+    <a href="{{ url_for('admin.data_mgt') }}">Data summary</a>
+    <a href="{{ url_for('admin.monthly_report') }}">Monthly Report</a>
+    <a href="{{ url_for('admin.new_transaction') }}">New Trx</a>
+    <a href="{{ url_for('admin.new_fund') }}">New Fund</a>
+    <a href="#">Scenaries</a>
+    <a href="#">Delete</a>
+  </div>
+
+
+
+
+    <div class="container-new-fund">
+            <div class="form-container-new-fund"> 
+       
+<!-- <div class="signup">
+            <div class="signup-container"> -->
+
+                <h2>New Fund</h2>
+                <form action="{{ url_for('admin.new_fund') }}" method="post">
+                    {{ form.hidden_tag() }}
+    
+                    <div id="form-errors"></div>
+                    
+                    <div class="form-group">
+                        <label for="name">Nombre del fondo:</label>
+                        {{ form.name(class_="form-control") }}
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="contract_number">Número de expediente:</label>
+                        {{ form.contract_number(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="owner">Titular</label>
+                        {{ form.owner(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Fecha de alta y compra del fondo:</label>
+                        {{ form.date(class_="form-control") }}
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="value_per_unit">Valor liquidativo:</label>
+                        {{ form.value_per_unit(class_="form-control") }}
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="units">Número de participaciones:</label>
+                        {{ form.units(class_="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label for="currency">Divisa:</label>
+                        {{ form.currency(class_="form-control") }}
+                    </div>                
+                    <div class="form-group">
+                        <label for="management_fees">Comisión anual de gestión + deposito:</label>
+                        {{ form.management_fees(class_="form-control") }}
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="sell_fees">Comisión de venta:</label>
+                        {{ form.sell_fees(class_="form-control") }}
+                        {% if form.sell_fees.errors %}
+                        <div class="error-message">{{ form.sell_fees.errors }}</div>
+                    {% endif %}
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="ter_fees">Comisión TER:</label>
+                        {{ form.ter_fees(class_="form-control") }}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Guardar fondo</button>
+                </form>
+           <!--     
+                <form>
+                    <input type="text" placeholder="Fund name" required>
+                    <input type="text" placeholder="Contract Number" required>
+                    <input type="text" placeholder="Contract holder" required>
+                    <input type="date" placeholder="Initial Date" required>
+                    <input type="currency" placeholder="Currency" required>
+                    <input type="text" placeholder="Management Fees">
+                    <input type="text" placeholder="Sell Fees">
+                    <input type="text" placeholder="TER Fees">
+                    <input type="float" placeholder="Units/Shares bought">
+                    <input type="float" placeholder="Value per unit">
+                    <button type="submit">Save</button>
+                </form>
+
+            -->    
+            </div>
+        
+
+    </div>
+
+
+{% endblock %}
