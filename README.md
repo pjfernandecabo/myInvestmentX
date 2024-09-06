@@ -1,7 +1,7 @@
 
 
 
-![MyInvestmentX](./app/static/images/logo_myfinancex.png)
+![MyInvestmentX](./app/static/images/logo_myinvestmentx.png)
 
 ![Static Badge](https://img.shields.io/badge/Status-Development-red)
 
