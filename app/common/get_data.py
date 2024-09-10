@@ -225,7 +225,66 @@ class GetSQLData2Pandas:
     #####################################################################################
     ############### hasta aqui todo de Summary
 
-    #################### Monthly report
+    #################### Monthly report ###############################################################
+
+    @staticmethod
+    def calculate_kpis(df, end_date):
+        """
+        Calcula los KPIs para un usuario específico: saldo total en EUR, USD, y saldo de inicio.
+        """
+
+        # Obtener todas las transacciones del usuario
+        #user_transactions = get_user_transactions(df, owner)
+        user_transactions = df.copy()
+
+        # Convertir la columna 'date' a formato datetime si no está ya en ese formato
+        user_transactions['date'] = pd.to_datetime(user_transactions['date'])
+        
+        # Filtrar las transacciones hasta la fecha de fin (end_date)
+        user_transactions = user_transactions[user_transactions['date'] <= pd.to_datetime(end_date)]
+        
+        # Crear una columna 'total_value' que será units * value_per_unit
+        user_transactions['total_value'] = user_transactions['units'] * user_transactions['value_per_unit']
+
+        # 1. Saldo actual total en EUR: obtener el último 'update' de cada fondo en EUR antes de end_date
+        saldo_actual_eur = user_transactions[(user_transactions['currency'] == 'EUR') & 
+                                            (user_transactions['transaction_type'] == 'update')].groupby('fund').last()
+        total_saldo_eur = saldo_actual_eur['total_value'].sum()
+
+        # 2. Saldo actual total en USD: obtener el último 'update' de cada fondo en USD antes de end_date
+        saldo_actual_usd = user_transactions[(user_transactions['currency'] == 'USD') & 
+                                            (user_transactions['transaction_type'] == 'update')].groupby('fund').last()
+        total_saldo_usd = saldo_actual_usd['total_value'].sum()
+
+        # 3. Saldo total de inicio: sumar todas las transacciones de first buy, buy y sell, pero separado por moneda
+        # 3.1 Sumar las transacciones en EUR
+        first_buy_eur = user_transactions[(user_transactions['transaction_type'].isin(['first buy', 'buy', 'sell'])) & 
+                                        (user_transactions['currency'] == 'EUR')]
+        total_saldo_inicio_eur = first_buy_eur['total_value'].sum()
+
+        # 3.2 Sumar las transacciones en USD
+        first_buy_usd = user_transactions[(user_transactions['transaction_type'].isin(['first buy', 'buy', 'sell'])) & 
+                                        (user_transactions['currency'] == 'USD')]
+        total_saldo_inicio_usd = first_buy_usd['total_value'].sum()
+
+        # Resultado final en un diccionario para fácil acceso
+        kpis_dict = {
+            'saldo_actual_eur': total_saldo_eur,
+            'saldo_actual_usd': total_saldo_usd,
+            'saldo_total_inicio_eur': total_saldo_inicio_eur,
+            'saldo_total_inicio_usd': total_saldo_inicio_usd
+        }
+
+        return kpis_dict
+
+
+
+
+
+
+
+
+
     @staticmethod
     def get_monthly_balance(df, start_date, end_date):
         '''
@@ -409,7 +468,9 @@ class GetSQLData2Pandas:
             }
 
             df_table = pd.DataFrame(table_data)
-            logger.debug(f"\n{table_data =}")
+            #logger.debug(f"\n{table_data =}")
+            #df_table_html = [df.to_html(float_format="{:,.2f}".format,index=False, classes='table table-bordered') for df in df_table]
+
             df_table_html = df_table.to_html(index=False, classes='table table-bordered')
             # Agregar tabla al HTML
             tables_html.append(f'<h3>Fund: {fund_name} ({currency})</h3>' + df_table_html)
@@ -449,8 +510,18 @@ class GetSQLData2Pandas:
         return tables_html, plots_html
 
 
+    @staticmethod
+    def format_dataframe(df):
+        # Función para aplicar estilo a números negativos en rojo
+        def highlight_negative(val):
+            color = 'red' if val < 0 else 'black'
+            return f'color: {color}'
 
-
+        # Formatear los números y aplicar el color rojo a los negativos
+        styled_df = (df.style
+                    .applymap(highlight_negative)  # Resalta números negativos
+                    .format("{:,.2f}"))  # Aplica formato de miles y decimales
+        return styled_df
 
 
 

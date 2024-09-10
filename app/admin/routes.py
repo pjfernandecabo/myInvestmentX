@@ -114,50 +114,29 @@ def data_mgt():
 @login_required
 def monthly_report():
 
-    print("entro en monthly_report")
     user_id = current_user.id
-    #print(f"\n{user_id =}")
-    
+    tables_html = []
+    plots_html = []    
+    kpis = {}
     draw = DrawFigures()
     d2p = GetSQLData2Pandas()
     form = MonthlyReportForm()
     
     # Cargar los owners en el desplegable
     form.owner.choices = [('all', 'Todos')] + [(owner.owner, owner.owner) for owner in Fund.query.distinct(Fund.owner).all()]
-    #print(f"\n{form.owner.choices = }")
-
-    tables_html = []
-    plots_html = []
-
 
     if request.method == 'POST':
        # Cargar las opciones de fondos según el owner seleccionado en el POST request
         selected_owner = form.owner.data
-        #print(f"\n{selected_owner = }")
-        #form.owner.choices = [(fund.name, fund.name) for fund in Fund.query.filter_by(owner=selected_owner).all()]
-        #print(f"\n{form.owner.choices = }")
+
         # Reconfigurar las opciones del owner en caso de POST para asegurarse que se validen correctamente
         form.owner.choices = [('all', 'Todos')] + [(owner.owner, owner.owner) for owner in db.session.query(Fund.owner).distinct().all()]
-        
-        # Debugging: Ver qué valores tiene el formulario al hacer POST
-        #print(f"Selected Owner: {selected_owner}")
-        #print(f"Form Owner Choices: {form.owner.choices}")
-        #print(f"Form Data: {request.form}")
-
 
         if form.validate_on_submit():
             # Obtener los datos del formulario
             selected_owner = form.owner.data
             start_date = form.start_date.data
             end_date = form.end_date.data
-            #print(f"\n{form.owner.choices = }")
-            #print(f"\n{selected_owner = }")
-            #print(f"\n{start_date = }")
-            #print(f"\n{end_date = }")
-
-            # Convertir las cadenas YYYY-MM a fechas completas para la consulta
-            #start_date = datetime.strptime(f"{start_date}-01", '%Y-%m-%d')
-            #end_date = datetime.strptime(f"{end_date}-31", '%Y-%m-%d')
 
             start_date = datetime.strptime(f"{start_date}", '%Y-%m-%d')
             end_date = datetime.strptime(f"{end_date}", '%Y-%m-%d')
@@ -167,10 +146,9 @@ def monthly_report():
             if selected_owner != 'all':
                 query = query.filter(Fund.owner == selected_owner)
 
+            ### Calculamos TODAS las trx del owner seleccionado #################################################################
             query = query.filter(Transaction.date >= start_date, Transaction.date <= end_date)
-
             transactions = query.all()
-            #logger.debug(f"\n{transactions =}")
 
             df_transactions = pd.DataFrame([{
                 'fund': fund.name,
@@ -183,6 +161,11 @@ def monthly_report():
             } for transaction, fund in transactions])
             logger.debug(f"\n{df_transactions =}")
 
+            ########## Calculamos KPIs ###################################################################
+            kpis = d2p.calculate_kpis(df_transactions, end_date)
+            logger.debug(f"\n{kpis =}")
+
+            ########## Calculamos TABLAS ###################################################################
             df_monthly_balance = d2p.get_monthly_balance(df_transactions, start_date, end_date)
             logger.debug(f"\n{df_monthly_balance =}")
 
@@ -197,24 +180,14 @@ def monthly_report():
 
             df_annualized_cumulative = d2p.annualize_cumulative_percentage(df_cumulative_percentage, start_date, end_date)
             logger.debug(f"\n{df_annualized_cumulative =}")
-            #print(f"\n{df_annualized_cumulative=}")
 
-            # Procesar los datos para calcular el saldo
-            #report_data = d2p.get_transactions_by_date(transactions, start_date, end_date)
-            #logger.debug(f"\n{report_data =}")
-
-            # Generar tablas y gráficos
-            #tables_html, plots_html = draw.generate_table_and_plot(df_annualized_cumulative)
             tables_html, plots_html = d2p.calculate_table_monthly_report(df_annualized_cumulative)
-            logger.debug(f"\n{tables_html =}")
-            logger.debug(f"\n{plots_html =}")
+            ########## Calculamos GRAFICOS ###################################################################
 
-            #return render_template('admin/monthly_report.html', form=form)
-            #return redirect(url_for('admin.monthly_report'))
         else: 
             print(f"{form.errors =}")
     
-    return render_template('admin/monthly_report.html', form=form, tables_html=tables_html, plots_html=plots_html)
+    return render_template('admin/monthly_report.html', form=form, kpis=kpis, tables_html=tables_html, plots_html=plots_html)
 
 
 

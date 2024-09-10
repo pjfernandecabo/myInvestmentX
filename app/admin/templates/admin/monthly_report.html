@@ -56,13 +56,39 @@
         </form>
     </div>
 
+
+
     <!-- Sección de KPIs -->
     <div class="kpi-section container">
-        <div class="kpi-card">KPI 1: <span>0.614</span></div>
-        <div class="kpi-card">KPI 2: <span>0.614</span></div>
-        <div class="kpi-card">KPI 3: <span>0.614</span></div>
-        <div class="kpi-card">KPI 4: <span>0.614</span></div>
-        <!-- Añadir más KPIs según sea necesario -->
+        <!-- Verificamos si existe saldo_actual_eur en el diccionario kpis -->
+        {% if kpis.saldo_actual_eur is not none %}
+        <div class="kpi-card">
+            Saldo Total Fin Periodo EUR: <span>{{ kpis.saldo_actual_eur | currency }}</span>
+        </div>
+        {% endif %}
+        
+        <!-- Verificamos si existe saldo_actual_usd en el diccionario kpis -->
+        {% if kpis.saldo_actual_usd is not none %}
+        <div class="kpi-card">
+            Saldo Total Fin Periodo USD: <span>{{ kpis.saldo_actual_usd | currency  }}</span>
+        </div>
+        {% endif %}
+        
+        <!-- Verificamos si existe saldo_total_inicio_eur en el diccionario kpis -->
+        {% if kpis.saldo_total_inicio_eur is not none %}
+        <div class="kpi-card">
+            Saldo Total Inicio EUR: <span>{{ kpis.saldo_total_inicio_eur | currency  }}</span>
+        </div>
+        {% endif %}
+        
+        <!-- Verificamos si existe saldo_total_inicio_usd en el diccionario kpis -->
+        {% if kpis.saldo_total_inicio_usd is not none %}
+        <div class="kpi-card">
+            Saldo Total Inicio USD: <span>{{ kpis.saldo_total_inicio_usd | currency  }}</span>
+        </div>
+        {% endif %}
+        
+        <!-- Si hay más valores en el diccionario, añadir más KPIs dinámicamente -->
     </div>
 
 
@@ -71,7 +97,7 @@
         {% if tables_html %}
             <h3>Results</h3>
             {% for table in tables_html %}
-                {{ table|safe }}
+                {{ table| safe  }}
             {% endfor %}
         {% endif %}
     </div>
