@@ -269,10 +269,10 @@ class GetSQLData2Pandas:
 
         # Resultado final en un diccionario para fácil acceso
         kpis_dict = {
-            'saldo_actual_eur': total_saldo_eur,
-            'saldo_actual_usd': total_saldo_usd,
-            'saldo_total_inicio_eur': total_saldo_inicio_eur,
-            'saldo_total_inicio_usd': total_saldo_inicio_usd
+            'saldo total fin eur': total_saldo_eur,
+            'saldo total fin usd': total_saldo_usd,
+            'saldo total inicio eur': total_saldo_inicio_eur,
+            'saldo total inicio usd': total_saldo_inicio_usd
         }
 
         return kpis_dict

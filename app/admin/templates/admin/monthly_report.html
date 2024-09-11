@@ -60,37 +60,49 @@
 
     <!-- Sección de KPIs -->
     <div class="kpi-section container">
-        <!-- Verificamos si existe saldo_actual_eur en el diccionario kpis -->
-        {% if kpis.saldo_actual_eur is not none %}
         <div class="kpi-card">
-            Saldo Total Fin Periodo EUR: <span>{{ kpis.saldo_actual_eur | currency }}</span>
+            {% set kpi_count = kpis|length %}
+            <div class="kpi-section cols-{{ 2 if kpi_count <= 4 else 4 if kpi_count <= 8 else 6 }}">
+                {% for key, value in kpis.items() %}
+                <div class="kpi-card">{{ key }}: <span>{{ value | currency }}</span></div>
+                {% endfor %}
+            </div>
         </div>
-        {% endif %}
-        
-        <!-- Verificamos si existe saldo_actual_usd en el diccionario kpis -->
-        {% if kpis.saldo_actual_usd is not none %}
-        <div class="kpi-card">
-            Saldo Total Fin Periodo USD: <span>{{ kpis.saldo_actual_usd | currency  }}</span>
-        </div>
-        {% endif %}
-        
-        <!-- Verificamos si existe saldo_total_inicio_eur en el diccionario kpis -->
-        {% if kpis.saldo_total_inicio_eur is not none %}
-        <div class="kpi-card">
-            Saldo Total Inicio EUR: <span>{{ kpis.saldo_total_inicio_eur | currency  }}</span>
-        </div>
-        {% endif %}
-        
-        <!-- Verificamos si existe saldo_total_inicio_usd en el diccionario kpis -->
-        {% if kpis.saldo_total_inicio_usd is not none %}
-        <div class="kpi-card">
-            Saldo Total Inicio USD: <span>{{ kpis.saldo_total_inicio_usd | currency  }}</span>
-        </div>
-        {% endif %}
-        
-        <!-- Si hay más valores en el diccionario, añadir más KPIs dinámicamente -->
     </div>
 
+
+
+    <!--
+    <div class="kpi-section container">
+        <div class="kpi-grid">
+            {% if kpis.saldo_actual_eur is not none %}
+            <div class="kpi-card">
+                Saldo Total Fin Periodo EUR: <span>{{ kpis.saldo_actual_eur | currency }}</span>
+            </div> 
+            {% endif %}
+            
+            {% if kpis.saldo_actual_usd is not none %}
+            <div class="kpi-card">
+                Saldo Total Fin Periodo USD: <span>{{ kpis.saldo_actual_usd | currency }}</span>
+            </div>
+            {% endif %}
+            
+            {% if kpis.saldo_total_inicio_eur is not none %}
+            <div class="kpi-card">
+                Saldo Total Inicio EUR: <span>{{ kpis.saldo_total_inicio_eur | currency  }}</span>
+            </div>
+            {% endif %}
+            
+            {% if kpis.saldo_total_inicio_usd is not none %}
+            <div class="kpi-card">
+                Saldo Total Inicio USD: <span>{{ kpis.saldo_total_inicio_usd | currency  }}</span>
+            </div>
+            {% endif %}
+            
+        </div>
+    </div>
+    -->
+    
 
     <!-- Tabla de Datos -->
     <div class="table-section container">
