@@ -267,21 +267,67 @@ class GetSQLData2Pandas:
                                         (user_transactions['currency'] == 'USD')]
         total_saldo_inicio_usd = first_buy_usd['total_value'].sum()
 
+
+        # 3.3 Sumar todos los aportes en EUR del periodo
+        aportes_eur = user_transactions[(user_transactions['transaction_type'].isin(['buy'])) & 
+                                        (user_transactions['currency'] == 'EUR')]
+        total_aportes_eur = aportes_eur['total_value'].sum()
+
+        # 3.4 Sumar todos los aportes en USD del periodo
+        aportes_usd = user_transactions[(user_transactions['transaction_type'].isin(['buy'])) & 
+                                        (user_transactions['currency'] == 'USD')]
+        total_aportes_usd = aportes_usd['total_value'].sum()
+
+        # 3.5 calcular % de rentabilidad del periodo en EUR
+        rentabilidad_eur = (total_saldo_eur / total_saldo_inicio_eur - 1) * 100
+
+        # 3.6 calcular % de rentabilidad del periodo en USD
+        rentabilidad_usd = (total_saldo_usd / total_saldo_inicio_usd - 1) * 100
+        
+        # 3.7 sumar todos los retiros del periodo en EUR
+        retiros_eur = user_transactions[(user_transactions['transaction_type'].isin(['sell'])) & 
+                                        (user_transactions['currency'] == 'EUR')]
+        total_retiros_eur = retiros_eur['total_value'].sum()
+
+        # 3.8 sumar todos los retiros del periodo en USD
+        retiros_usd = user_transactions[(user_transactions['transaction_type'].isin(['sell'])) & 
+                                        (user_transactions['currency'] == 'USD')]
+        total_retiros_usd = retiros_usd['total_value'].sum()
+
         # Resultado final en un diccionario para fácil acceso
-        kpis_dict = {
-            'saldo total fin eur': total_saldo_eur,
-            'saldo total fin usd': total_saldo_usd,
-            'saldo total inicio eur': total_saldo_inicio_eur,
-            'saldo total inicio usd': total_saldo_inicio_usd
-        }
+   #     kpis_dict = {
+   #         'saldo total fin eur': total_saldo_eur,
+   #         'saldo total fin usd': total_saldo_usd,
+   #         'saldo total inicio eur': total_saldo_inicio_eur,
+   #         'saldo total inicio usd': total_saldo_inicio_usd
+   #     }
+
+        if (total_saldo_usd < 1) & (total_saldo_inicio_usd < 1): 
+            kpis_dict = {
+                'Saldo Total fin EUR': total_saldo_eur,
+                'Ganancia Periodo EUR': total_saldo_eur - total_saldo_inicio_eur,
+                'Aportes EUR': total_aportes_eur,
+                'Saldo Total inicio EUR': total_saldo_inicio_eur,
+                '% Ganancia EUR': rentabilidad_eur, 
+                'Retiros EUR': total_retiros_eur,
+            }
+        else:
+            kpis_dict = {
+                'Saldo Total fin EUR': total_saldo_eur,
+                'Ganancia Periodo EUR': total_saldo_eur - total_saldo_inicio_eur,
+                'Aportes EUR': total_aportes_eur,
+                'Saldo Total inicio EUR': total_saldo_inicio_eur,
+                '% Ganancia EUR': rentabilidad_eur, 
+                'Retiros EUR': total_retiros_eur,
+                'Saldo Total fin USD': total_saldo_usd,
+                'Ganancia Periodo USD': total_saldo_usd - total_saldo_inicio_usd,
+                'Aportes USD': total_aportes_usd,
+                'Saldo Total inicio USD': total_saldo_inicio_usd,
+                '% Ganancia USD': rentabilidad_usd, 
+                'Retiros USD': total_retiros_usd,
+            }
 
         return kpis_dict
-
-
-
-
-
-
 
 
 

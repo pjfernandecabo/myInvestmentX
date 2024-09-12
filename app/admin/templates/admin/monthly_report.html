@@ -62,8 +62,9 @@
     <div class="kpi-section container">
         <div class="kpi-card">
             {% set kpi_count = kpis|length %}
-            <div class="kpi-section cols-{{ 2 if kpi_count <= 4 else 4 if kpi_count <= 8 else 6 }}">
-                {% for key, value in kpis.items() %}
+            <!--<div class="kpi-section cols-{{ 2 if kpi_count <= 4 else 4 if kpi_count <= 8 else 6 }}">-->
+            <div class="kpi-section cols-{{ 2 if kpi_count <= 4 else 3 }}">
+                    {% for key, value in kpis.items() %}
                 <div class="kpi-card">{{ key }}: <span>{{ value | currency }}</span></div>
                 {% endfor %}
             </div>

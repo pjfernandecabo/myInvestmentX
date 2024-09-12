@@ -551,6 +551,10 @@ form h2 {
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* 3 columns */
+.kpi-section.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
 /* 4 columns */
 .kpi-section.cols-4 {
   grid-template-columns: repeat(4, 1fr);
