@@ -104,6 +104,56 @@
     </div>
     -->
     
+    <table>
+        <thead>
+            <tr>
+                <th>Fondo</th>
+                <th>Moneda</th>
+                <th>Saldo Final</th>
+                <th>Saldo Inicio Periodo</th>
+                <th>Saldo Inicio Fondo</th>
+                <th>Ganancia Periodo</th>
+                <th>Ganancia Total</th>
+                <th>Ganancia Último Mes</th>
+                <th>Aportes (Buy)</th>
+                <th>Retiros (Sell)</th>
+                <th>% Ganancia Inicial</th>
+                <th>% Ganancia Periodo</th>
+                <th>% Ganancia Último Mes</th>
+                <th>% Ganancia Año</th>
+                <th>% Ganancia Interanual</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for (fund, currency), metrics in global_table.items() %}
+            <tr>
+                <td>{{ fund }}</td>
+                <td>{{ currency }}</td>
+                <td>{{ metrics['saldo_final_periodo'] | currency }}</td>
+                <td>{{ metrics['saldo_inicio_periodo'] | currency  }}</td>
+                <td>{{ metrics['saldo_inicio_fondo'] | currency  }}</td>
+                <td>{{ metrics['ganancia_periodo'] | currency  }}</td>
+                <td>{{ metrics['ganancia_total'] | currency  }}</td>
+                <td>{{ metrics['ganancia_mes'] | currency  }}</td>
+                <td>{{ metrics['total_buys'] | currency  }}</td>
+                <td>{{ metrics['total_sells'] | currency  }}</td>
+                <td>{{ metrics['porcentaje_ganancia_inicial'] | currency  }}</td>
+                <td>{{ metrics['porcentaje_ganancia_periodo'] | currency  }}</td>
+                <td>{{ metrics['porcentaje_ganancia_mes'] | currency  }}</td>
+                <td>{{ metrics['porcentaje_ganancia_ano'] | currency  }}</td>
+                <td>{{ metrics['porcentaje_ganancia_interanual'] | currency  }}</td>
+                    
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+
+
+
+
 
     <!-- Tabla de Datos -->
     <div class="table-section container">

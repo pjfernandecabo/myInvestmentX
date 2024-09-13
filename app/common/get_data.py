@@ -294,14 +294,6 @@ class GetSQLData2Pandas:
                                         (user_transactions['currency'] == 'USD')]
         total_retiros_usd = retiros_usd['total_value'].sum()
 
-        # Resultado final en un diccionario para fácil acceso
-   #     kpis_dict = {
-   #         'saldo total fin eur': total_saldo_eur,
-   #         'saldo total fin usd': total_saldo_usd,
-   #         'saldo total inicio eur': total_saldo_inicio_eur,
-   #         'saldo total inicio usd': total_saldo_inicio_usd
-   #     }
-
         if (total_saldo_usd < 1) & (total_saldo_inicio_usd < 1): 
             kpis_dict = {
                 'Saldo Total fin EUR': total_saldo_eur,
@@ -328,6 +320,152 @@ class GetSQLData2Pandas:
             }
 
         return kpis_dict
+
+
+    @staticmethod
+    def get_global_table(df, start_date, end_date):
+        '''
+        Mostramos una tabla global en donde cada fila representa un FI y columnas:
+        -
+        -
+        -
+        --
+        
+        '''
+         # Convertir las fechas a datetime para evitar problemas de comparación
+        df['date'] = pd.to_datetime(df['date'])
+        start_date = pd.to_datetime(start_date)
+        end_date = pd.to_datetime(end_date)
+
+        # Crear una columna 'total_value' que será units * value_per_unit
+        df['total_value'] = df['units'] * df['value_per_unit']
+        
+        # Inicializamos un diccionario para guardar los resultados
+        funds_metrics = {}
+
+        # Agrupar por fondo y moneda
+        grouped_funds = df.groupby(['fund', 'currency'])
+
+        for (fund, currency), group in grouped_funds:
+
+            # Primero obtenemos el saldo inicial del fondo, que es la primera transacción de tipo 'first buy'
+            first_buy_row = group[group['transaction_type'] == 'first buy'].sort_values(by='date').iloc[0]
+            first_buy_date = first_buy_row['date']
+            first_buy = first_buy_row['total_value']            
+
+            # Luego aplicamos los filtros de fecha para el resto de los cálculos
+            group_sorted = group[(group['date'] >= start_date) & (group['date'] <= end_date)].sort_values(by='date')
+
+            if group_sorted.empty:
+                continue  # Si no hay transacciones en el rango de fechas, saltamos este fondo
+
+            # 1. Saldo final del periodo (último update más reciente en el periodo)
+            saldo_final_periodo = group_sorted['total_value'].iloc[-1]
+
+            # 2. Saldo inicio del periodo (el update más lejano en fecha o el primer first buy dentro del periodo)
+            saldo_inicio_periodo = group_sorted['total_value'].iloc[0]
+
+            # 3. El saldo inicio del fondo ya lo calculamos fuera del rango de fechas
+
+            # 4. Ganancia en unidades monetarias del periodo
+            ganancia_periodo = saldo_final_periodo - saldo_inicio_periodo
+
+            # 5. Ganancia desde el inicio del fondo hasta la última fecha
+            ganancia_total = saldo_final_periodo - first_buy
+
+            # 6. Ganancia del último mes (filtrando por el último mes)
+            last_month_transactions = group_sorted[group_sorted['date'] >= (end_date - pd.DateOffset(months=1))]
+            if not last_month_transactions.empty:
+                saldo_inicio_mes = last_month_transactions['total_value'].iloc[0]
+                saldo_final_mes = last_month_transactions['total_value'].iloc[-1]
+                ganancia_mes = saldo_final_mes - saldo_inicio_mes
+            else:
+                ganancia_mes = 0
+
+            # 7. Todos los aportes hechos al fondo (transacciones de tipo 'buy')
+            total_buys = group[group['transaction_type'] == 'buy']['total_value'].sum()
+
+            # 8. Todos los retiros hechos al fondo (transacciones de tipo 'sell')
+            total_sells = group[group['transaction_type'] == 'sell']['total_value'].sum()
+
+            # 9. Porcentaje de ganancia desde el inicio del fondo
+            porcentaje_ganancia_inicial = ((saldo_final_periodo - first_buy) / first_buy) * 100
+
+            # 10. Porcentaje de ganancia del periodo
+            porcentaje_ganancia_periodo = ((saldo_final_periodo - saldo_inicio_periodo) / saldo_inicio_periodo) * 100
+
+            # 11. Porcentaje de ganancia del último mes
+            if saldo_inicio_mes > 0:
+                porcentaje_ganancia_mes = (ganancia_mes / saldo_inicio_mes) * 100
+            else:
+                porcentaje_ganancia_mes = 0
+
+            # 12. Porcentaje de ganancia desde el primero de enero del año
+            start_of_year = pd.Timestamp(end_date.year, 1, 1)
+            if first_buy_date > start_of_year:
+                # Si la fecha de first_buy es posterior al 1 de enero, usamos la fecha de first_buy como punto de partida
+                transactions_from_year_start = group[group['date'] >= first_buy_date]
+                saldo_inicio_ano = first_buy
+            else:
+                # Si el first_buy es anterior al 1 de enero, usamos el saldo del 1 de enero
+                transactions_from_year_start = group[group['date'] >= start_of_year]
+                saldo_inicio_ano = transactions_from_year_start['value_per_unit'].iloc[0] if not transactions_from_year_start.empty else saldo_final_periodo
+
+            porcentaje_ganancia_ano = ((saldo_final_periodo - saldo_inicio_ano) / saldo_inicio_ano) * 100
+
+            # 13. Porcentaje de ganancia interanual (últimos 12 meses, proyectado si es menor de 12 meses)
+            last_12_months_start = end_date - pd.DateOffset(years=1)
+            if first_buy_date > last_12_months_start:
+                # Si el first_buy es posterior al inicio de los últimos 12 meses, usamos la fecha de first_buy
+                transactions_last_12_months = group[group['date'] >= first_buy_date]
+                saldo_inicio_12m = first_buy
+                meses_periodo = (end_date - first_buy_date).days / 30
+            else:
+                # Si el first_buy es anterior a los últimos 12 meses, tomamos los últimos 12 meses
+                transactions_last_12_months = group[group['date'] >= last_12_months_start]
+                saldo_inicio_12m = transactions_last_12_months['value_per_unit'].iloc[0]
+                meses_periodo = 12  # Son los últimos 12 meses completos
+
+            ganancia_12m = ((saldo_final_periodo - saldo_inicio_12m) / saldo_inicio_12m) * 100
+            porcentaje_ganancia_interanual = (ganancia_12m / meses_periodo) * 12  # Proyección a 12 meses
+
+
+            # Agregar los resultados al diccionario de métricas
+            funds_metrics[(fund, currency)] = {
+                'saldo_final_periodo': saldo_final_periodo,
+                'saldo_inicio_periodo': saldo_inicio_periodo,
+                'saldo_inicio_fondo': first_buy,
+                'ganancia_periodo': ganancia_periodo,
+                'ganancia_total': ganancia_total,
+                'ganancia_mes': ganancia_mes,
+                'total_buys': total_buys,
+                'total_sells': total_sells,
+                'porcentaje_ganancia_inicial': porcentaje_ganancia_inicial,
+                'porcentaje_ganancia_periodo': porcentaje_ganancia_periodo,
+                'porcentaje_ganancia_mes': porcentaje_ganancia_mes,
+                'porcentaje_ganancia_ano': porcentaje_ganancia_ano,
+                'porcentaje_ganancia_interanual': porcentaje_ganancia_interanual
+            }
+
+        return funds_metrics
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

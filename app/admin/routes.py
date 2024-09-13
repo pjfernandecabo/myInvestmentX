@@ -165,21 +165,25 @@ def monthly_report():
             kpis = d2p.calculate_kpis(df_transactions, end_date)
             logger.debug(f"\n{kpis =}")
 
-            ########## Calculamos TABLAS ###################################################################
+            ########## Calculamos TABLA GLOBAL ###################################################################
+            global_table = d2p.get_global_table(df_transactions, start_date, end_date)
+            logger.debug(f"\n{global_table =}")
+
+            ########## Calculamos TABLAS DE CADA FONDO ###################################################################
             df_monthly_balance = d2p.get_monthly_balance(df_transactions, start_date, end_date)
-            logger.debug(f"\n{df_monthly_balance =}")
+            #logger.debug(f"\n{df_monthly_balance =}")
 
             df_monthly_difference = d2p.calculate_monthly_difference(df_transactions, df_monthly_balance)
-            logger.debug(f"\n{df_monthly_difference =}")
+            #logger.debug(f"\n{df_monthly_difference =}")
 
             df_monthly_percentage = d2p.calculate_monthly_percentage_change(df_monthly_difference)
-            logger.debug(f"\n{df_monthly_percentage =}")
+            #logger.debug(f"\n{df_monthly_percentage =}")
 
             df_cumulative_percentage = d2p.calculate_cumulative_percentage_change(df_monthly_percentage)
-            logger.debug(f"\n{df_cumulative_percentage =}")
+            #logger.debug(f"\n{df_cumulative_percentage =}")
 
             df_annualized_cumulative = d2p.annualize_cumulative_percentage(df_cumulative_percentage, start_date, end_date)
-            logger.debug(f"\n{df_annualized_cumulative =}")
+            #logger.debug(f"\n{df_annualized_cumulative =}")
 
             tables_html, plots_html = d2p.calculate_table_monthly_report(df_annualized_cumulative)
             ########## Calculamos GRAFICOS ###################################################################
@@ -187,7 +191,7 @@ def monthly_report():
         else: 
             print(f"{form.errors =}")
     
-    return render_template('admin/monthly_report.html', form=form, kpis=kpis, tables_html=tables_html, plots_html=plots_html)
+    return render_template('admin/monthly_report.html', form=form, kpis=kpis, global_table=global_table, tables_html=tables_html, plots_html=plots_html)
 
 
 
