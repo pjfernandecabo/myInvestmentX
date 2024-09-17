@@ -533,6 +533,7 @@ form h2 {
   display: grid;
   gap: 20px; /* Space between the KPI cards */
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .kpi-card {

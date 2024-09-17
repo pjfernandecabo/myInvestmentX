@@ -59,6 +59,7 @@
 
 
     <!-- Sección de KPIs -->
+    {% if kpis %}
     <div class="kpi-section container">
         <div class="kpi-card">
             {% set kpi_count = kpis|length %}
@@ -70,7 +71,7 @@
             </div>
         </div>
     </div>
-
+    {% endif %}
 
 
     <!--
@@ -103,7 +104,8 @@
         </div>
     </div>
     -->
-    
+    <div class="table-section container">
+    {% if global_table %}
     <table>
         <thead>
             <tr>
@@ -147,8 +149,8 @@
             {% endfor %}
         </tbody>
     </table>
-
-
+    {% endif %}
+    </div>
 
 
 

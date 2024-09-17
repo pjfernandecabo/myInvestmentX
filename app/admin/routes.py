@@ -113,11 +113,12 @@ def data_mgt():
 @admin_bp.route('/monthly_report/', methods=['GET', 'POST'])
 @login_required
 def monthly_report():
-
+    print("entro 1")
     user_id = current_user.id
     tables_html = []
     plots_html = []    
     kpis = {}
+    global_table = {}
     draw = DrawFigures()
     d2p = GetSQLData2Pandas()
     form = MonthlyReportForm()
@@ -126,6 +127,7 @@ def monthly_report():
     form.owner.choices = [('all', 'Todos')] + [(owner.owner, owner.owner) for owner in Fund.query.distinct(Fund.owner).all()]
 
     if request.method == 'POST':
+        print("entro POST")
        # Cargar las opciones de fondos según el owner seleccionado en el POST request
         selected_owner = form.owner.data
 
@@ -133,6 +135,7 @@ def monthly_report():
         form.owner.choices = [('all', 'Todos')] + [(owner.owner, owner.owner) for owner in db.session.query(Fund.owner).distinct().all()]
 
         if form.validate_on_submit():
+            print("entro form")
             # Obtener los datos del formulario
             selected_owner = form.owner.data
             start_date = form.start_date.data
@@ -183,7 +186,7 @@ def monthly_report():
             #logger.debug(f"\n{df_cumulative_percentage =}")
 
             df_annualized_cumulative = d2p.annualize_cumulative_percentage(df_cumulative_percentage, start_date, end_date)
-            #logger.debug(f"\n{df_annualized_cumulative =}")
+            logger.debug(f"\n{df_annualized_cumulative =}")
 
             tables_html, plots_html = d2p.calculate_table_monthly_report(df_annualized_cumulative)
             ########## Calculamos GRAFICOS ###################################################################
@@ -191,6 +194,9 @@ def monthly_report():
         else: 
             print(f"{form.errors =}")
     
+    print(global_table)
+    print(global_table is not None)
+    print(not global_table)
     return render_template('admin/monthly_report.html', form=form, kpis=kpis, global_table=global_table, tables_html=tables_html, plots_html=plots_html)
 
 
