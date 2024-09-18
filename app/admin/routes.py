@@ -190,14 +190,26 @@ def monthly_report():
 
             tables_html, plots_html = d2p.calculate_table_monthly_report(df_annualized_cumulative)
             ########## Calculamos GRAFICOS ###################################################################
+            altair_chart = draw.plot_altair(df_annualized_cumulative)
+            matplotlib_chart = draw.plot_matplotlib(df_annualized_cumulative)
+            plotly_chart = draw.plot_plotly(df_annualized_cumulative)
+
+
 
         else: 
             print(f"{form.errors =}")
     
-    print(global_table)
-    print(global_table is not None)
-    print(not global_table)
-    return render_template('admin/monthly_report.html', form=form, kpis=kpis, global_table=global_table, tables_html=tables_html, plots_html=plots_html)
+    #print(global_table)
+    #print(global_table is not None)
+    #print(not global_table)
+    return render_template('admin/monthly_report.html', 
+                           form=form, 
+                           kpis=kpis, 
+                           global_table=global_table, 
+                           tables_html=tables_html, 
+                           altair_chart=altair_chart, 
+                           matplotlib_chart=matplotlib_chart, 
+                           plotly_chart=plotly_chart)
 
 
 

@@ -7,6 +7,8 @@ import altair as alt
 from flask import render_template
 import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.graph_objs as go
+import plotly.io as pio
 
 class DrawFigures:
 
@@ -193,3 +195,108 @@ class DrawFigures:
         return base64.b64encode(img.getvalue()).decode()
 
 
+
+
+
+    ################ MONTHLY_REPORT ###############################
+    @staticmethod
+    def plot_altair(df):
+        # Asegurarse de que 'month' sea de tipo fecha
+        df['month'] = pd.to_datetime(df['month'])
+
+        # Crear un gráfico de líneas para cada fondo
+        line = alt.Chart(df).mark_line(point=True).encode(
+            x=alt.X('month:T', title='Month'),
+            y=alt.Y('monthly_difference:Q', title='Monthly Difference (€)'),
+            color=alt.Color('fund:N', title='Fund'),  # Colorear por fondo
+            tooltip=[alt.Tooltip('fund:N', title='Fund'),
+                    alt.Tooltip('monthly_difference:Q', format=',.2f'),
+                    alt.Tooltip('monthly_pct_change:Q', title='Percentage Change', format=',.2%')]
+        ).properties(
+            title='Monthly Difference for Each Fund Over Time',
+            width=600,
+            height=400
+        )
+        
+        return line.to_html()
+
+    @staticmethod
+    def plot_matplotlib(df):
+        # Ensure 'month' is treated as a date
+        df['month'] = pd.to_datetime(df['month'])
+        
+        fig, ax = plt.subplots(figsize=(8, 5))
+        # Iterar sobre cada fondo para crear una línea
+        for fund, group in df.groupby('fund'):
+            ax.plot(group['month'], group['monthly_difference'], marker='o', label=fund)
+            
+            # Añadir etiquetas de cambio porcentual
+            for idx, row in group.iterrows():
+                ax.annotate(f'{row["monthly_difference"]:.2f}', (row['month'], row['monthly_difference']), 
+                            textcoords="offset points", xytext=(0, 10), ha='center')  # Display monthly_difference
+                ax.annotate(f'{row["monthly_pct_change"]:.2f}%', (row['month'], row['monthly_difference']), 
+                            textcoords="offset points", xytext=(0, 25), ha='center')  # Display monthly_pct_change
+
+
+        # Configurar ejes y leyenda
+        ax.set_xlabel('Month')
+        ax.set_ylabel('Monthly Difference (€)')
+        ax.set_title('Monthly Difference Over Time by Fund')
+        ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), title='Fund')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+
+        # Guardar la gráfica como una imagen PNG
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        img_base64 = base64.b64encode(buf.read()).decode('utf-8')
+        plt.close()
+        
+        return f'<img src="data:image/png;base64,{img_base64}" />'
+
+    @staticmethod
+    def plot_plotly(df):
+        # Ensure 'month' is treated as a date
+        df['month'] = pd.to_datetime(df['month'])
+        
+        # Formatear los valores de la columna 'monthly_difference' antes de pasarla al gráfico
+        df['formatted_monthly_difference'] = df['monthly_difference'].apply(lambda x: "{:,.2f}".format(x).replace(",", "X").replace(".", ",").replace("X", "."))
+        df['formatted_monthly_pct_change'] = df['monthly_pct_change'].apply(lambda x: "{:.2f}%".format(x))
+
+        fig = go.Figure()
+
+        # Iterar sobre cada fondo para crear una línea
+        for fund, group in df.groupby('fund'):
+            fig.add_trace(go.Scatter(
+                #x=group['month'],
+                #y=group['monthly_difference'],
+                #mode='lines+markers+text',
+                #text=group['monthly_difference'],
+                #text_monthly_pct_change=group['monthly_pct_change'],
+                #textposition="top center",
+                #hovertemplate='Month: %{x}<br>Balance: %{y:.2f}<br>% Change: %{text:.2}%',
+                #name=f"{fund}",
+                x=group['month'],
+                y=group['monthly_difference'],
+                mode='lines+markers+text',  # Add 'text' mode to show labels
+                text=group['formatted_monthly_difference'],  # This will display the monthly_difference values
+                textposition="top center",  # You can adjust this to suit your style
+                hovertemplate='Month: %{x}<br>Balance: %{y:.2f}<br>change: %{customdata[0]}<extra></extra>',
+                #hovertemplate='%{x}: %{y} units<extra></extra>',
+                customdata=group[['formatted_monthly_pct_change']],  # Pasar la columna 'monthly_pct_change' como datos personalizados
+                name=f"{fund}"
+            ))
+        
+        # Customize layout
+        fig.update_layout(
+            title='Monthly Difference Over Time',
+            xaxis_title='Month',
+            yaxis_title='Monthly Difference (€)',
+            hovermode='x unified',
+            legend_title_text='Fund',
+            width=800,
+            height=500
+        )
+        
+        return pio.to_html(fig, full_html=False)        
