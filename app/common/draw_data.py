@@ -117,30 +117,32 @@ class DrawFigures:
             # Agregar tabla al HTML
             tables_html.append(f'<h3>Fund: {fund_name} ({currency})</h3>' + df_table_html)
 
-            # Crear el scatter plot
-            scatter_plot = alt.Chart(group).mark_line(point=True).encode(
-                x=alt.X('month:T', title='Month'),
-                y=alt.Y('total value:Q', title='Final Balance'),
-                tooltip=['month:T', 'total value:Q']
-            ).properties(
-                title=f'Scatter Plot - {fund_name} ({currency})',
-                width=600,
-                height=400
-            )
 
-            # Convertir el gráfico en JSON para renderizar en el frontend
-            scatter_plot_json = scatter_plot.to_json()
-            plots_html.append(f'<h3>Scatter Plot for {fund_name} ({currency})</h3><div id="chart-{fund_name}"></div>')
             
-            # JavaScript para renderizar el gráfico
-            plots_html.append(f"""
-            <script type="text/javascript">
-                var spec = {scatter_plot_json};
-                vegaEmbed('#chart-{fund_name}', spec);
-            </script>
-            """)
+            # Crear el scatter plot
+            # scatter_plot = alt.Chart(group).mark_line(point=True).encode(
+            #     x=alt.X('month:T', title='Month'),
+            #     y=alt.Y('total value:Q', title='Final Balance'),
+            #     tooltip=['month:T', 'total value:Q']
+            # ).properties(
+            #     title=f'Scatter Plot - {fund_name} ({currency})',
+            #     width=600,
+            #     height=400
+            # )
 
-        return tables_html, plots_html
+            # # Convertir el gráfico en JSON para renderizar en el frontend
+            # scatter_plot_json = scatter_plot.to_json()
+            # plots_html.append(f'<h3>Scatter Plot for {fund_name} ({currency})</h3><div id="chart-{fund_name}"></div>')
+            
+            # # JavaScript para renderizar el gráfico
+            # plots_html.append(f"""
+            # <script type="text/javascript">
+            #     var spec = {scatter_plot_json};
+            #     vegaEmbed('#chart-{fund_name}', spec);
+            # </script>
+            # """)
+            
+        return tables_html #, plots_html
 
 
     ################## MATPLOTLIB ###################################

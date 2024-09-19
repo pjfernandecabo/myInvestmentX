@@ -154,6 +154,18 @@
 
 
 
+    <!-- Gráficos -->
+    <div class="chart-section container">
+        {% if altair_chart %}
+            {{ altair_chart|safe }}
+        {% endif %}
+        {% if matplotlib_chart %}
+            {{ matplotlib_chart|safe }}
+        {% endif %}
+        {% if plotly_chart %}
+            {{ plotly_chart|safe }}
+        {% endif %}        
+    </div>
 
 
 
@@ -165,23 +177,6 @@
                 {{ table| safe  }}
             {% endfor %}
         {% endif %}
-    </div>
-
-
-    <!-- Gráficos -->
-    <div class="chart-section container">
-        {% if altair_chart %}
-            <h3>Results</h3>
-            {{ altair_chart|safe }}
-        {% endif %}
-        {% if matplotlib_chart %}
-            <h3>Results</h3>
-            {{ matplotlib_chart|safe }}
-        {% endif %}
-        {% if plotly_chart %}
-        <h3>Results</h3>
-        {{ plotly_chart|safe }}
-        {% endif %}        
     </div>
 
 

@@ -597,12 +597,27 @@ table th, table td {
 .chart-section {
   background-color: #fff;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 10px;
   margin-bottom: 20px;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; /* Permite que los gráficos se acomoden en filas si hay más de uno */}
 
-.chart {
-  width: 100%;
-  height: 300px;
-  margin: 20px 0;
-}
+
+  .chart {
+    width: 100%;
+    max-width: 1000px; /* Ajusta el ancho máximo que ocupará el gráfico */
+    height: 500px; /* Puedes ajustar la altura aquí */
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @media (max-width: 768px) {
+    .chart {
+      width: 100%; /* Asegura que los gráficos ocupen todo el ancho en pantallas pequeñas */
+      height: 300px; /* Reduce la altura en pantallas pequeñas */
+    }
+  }

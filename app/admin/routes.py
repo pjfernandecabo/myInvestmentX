@@ -2,9 +2,12 @@ from datetime import datetime
 import locale
 import logging
 
+from altair import Chart
 from flask import Blueprint, render_template, redirect, url_for, flash, request, Response, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
+from matplotlib.figure import Figure as MatplotlibFigure
 import pandas as pd
+from plotly.graph_objs import Figure as PlotlyFigure
 from urllib.parse import urlparse
 
 from . import admin_bp
@@ -113,7 +116,6 @@ def data_mgt():
 @admin_bp.route('/monthly_report/', methods=['GET', 'POST'])
 @login_required
 def monthly_report():
-    print("entro 1")
     user_id = current_user.id
     tables_html = []
     plots_html = []    
@@ -122,12 +124,15 @@ def monthly_report():
     draw = DrawFigures()
     d2p = GetSQLData2Pandas()
     form = MonthlyReportForm()
-    
+    altair_chart = Chart
+    matplotlib_chart = MatplotlibFigure
+    plotly_chart = PlotlyFigure
+
+
     # Cargar los owners en el desplegable
     form.owner.choices = [('all', 'Todos')] + [(owner.owner, owner.owner) for owner in Fund.query.distinct(Fund.owner).all()]
 
     if request.method == 'POST':
-        print("entro POST")
        # Cargar las opciones de fondos según el owner seleccionado en el POST request
         selected_owner = form.owner.data
 
@@ -135,7 +140,6 @@ def monthly_report():
         form.owner.choices = [('all', 'Todos')] + [(owner.owner, owner.owner) for owner in db.session.query(Fund.owner).distinct().all()]
 
         if form.validate_on_submit():
-            print("entro form")
             # Obtener los datos del formulario
             selected_owner = form.owner.data
             start_date = form.start_date.data
@@ -190,8 +194,8 @@ def monthly_report():
 
             tables_html, plots_html = d2p.calculate_table_monthly_report(df_annualized_cumulative)
             ########## Calculamos GRAFICOS ###################################################################
-            altair_chart = draw.plot_altair(df_annualized_cumulative)
-            matplotlib_chart = draw.plot_matplotlib(df_annualized_cumulative)
+            #altair_chart = draw.plot_altair(df_annualized_cumulative)
+            #matplotlib_chart = draw.plot_matplotlib(df_annualized_cumulative)
             plotly_chart = draw.plot_plotly(df_annualized_cumulative)
 
 
@@ -207,8 +211,8 @@ def monthly_report():
                            kpis=kpis, 
                            global_table=global_table, 
                            tables_html=tables_html, 
-                           altair_chart=altair_chart, 
-                           matplotlib_chart=matplotlib_chart, 
+                           #altair_chart=altair_chart, 
+                           #matplotlib_chart=matplotlib_chart, 
                            plotly_chart=plotly_chart)
 
 
